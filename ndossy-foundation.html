@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N'dossy Foundation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink: #F4A7B9; --pink-deep: #E8728F; --plaster: #F9E4D4;
+      --plaster-dark: #F2CBAF; --white: #FFFAF8; --charcoal: #2D1F26;
+      --muted: #8A6272; --accent: #C94F73;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--charcoal); overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem; background: rgba(255,250,248,0.93); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--plaster-dark);
+    }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--accent); }
+    .nav-logo span { color: var(--charcoal); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--charcoal); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-right { display: flex; gap: 0.75rem; align-items: center; }
+    .nav-cta { background: var(--accent); color: white !important; padding: 0.6rem 1.4rem; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--pink-deep) !important; }
+    .admin-btn {
+      background: none; border: 1.5px solid var(--plaster-dark); color: var(--muted);
+      padding: 0.55rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; background: var(--plaster); position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, var(--pink) 0%, transparent 70%); top: -100px; right: -100px; opacity: 0.4; border-radius: 50%; }
+    .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 6rem 3rem 6rem 6rem; position: relative; z-index: 2; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: white; border: 1px solid var(--pink); color: var(--accent); font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 0.45rem 1rem; border-radius: 100px; margin-bottom: 2rem; width: fit-content; animation: fadeUp 0.8s ease forwards; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.05; color: var(--charcoal); margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.1s ease both; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1.1rem; color: var(--muted); line-height: 1.75; max-width: 480px; margin-bottom: 2.5rem; animation: fadeUp 0.8s 0.2s ease both; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
+    .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2rem; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: transform 0.2s, background 0.2s; box-shadow: 0 6px 20px rgba(201,79,115,0.3); display: inline-block; }
+    .btn-primary:hover { transform: translateY(-2px); background: var(--pink-deep); }
+    .btn-outline { border: 2px solid var(--charcoal); color: var(--charcoal); padding: 0.85rem 2rem; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: transform 0.2s, background 0.2s, color 0.2s; }
+    .btn-outline:hover { background: var(--charcoal); color: white; transform: translateY(-2px); }
+    .hero-right { display: flex; align-items: center; justify-content: center; padding: 4rem 4rem 4rem 2rem; position: relative; z-index: 2; }
+    .hero-img-wrap { width: 340px; height: 420px; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.15); animation: floatCard 4s ease-in-out infinite; position: relative; }
+    .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--pink) 0%, var(--pink-deep) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; color: white; text-align: center; padding: 2rem; cursor: pointer; transition: opacity 0.2s; }
+    .img-placeholder:hover { opacity: 0.9; }
+    .img-placeholder .big { font-size: 3rem; }
+    .img-placeholder p { font-size: 0.85rem; opacity: 0.9; }
+
+    /* STATS */
+    .stats-bar { background: var(--charcoal); color: white; display: flex; justify-content: center; }
+    .stat-item { flex: 1; max-width: 260px; text-align: center; padding: 2.5rem 2rem; border-right: 1px solid rgba(255,255,255,0.1); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--pink); display: block; }
+    .stat-desc { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 0.3rem; }
+
+    /* ABOUT */
+    .about { padding: 8rem 6rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900; line-height: 1.15; color: var(--charcoal); margin-bottom: 1.5rem; }
+    h2 em { font-style: italic; color: var(--accent); }
+    .about-text p { font-size: 1rem; line-height: 1.85; color: var(--muted); margin-bottom: 1.2rem; }
+    .about-visual { background: var(--plaster); border-radius: 32px; padding: 3rem; position: relative; overflow: hidden; }
+    .about-visual::after { content: '♀'; position: absolute; font-size: 12rem; color: var(--pink); opacity: 0.15; bottom: -2rem; right: -1rem; line-height: 1; }
+    .about-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+    .about-list li { display: flex; align-items: flex-start; gap: 1rem; font-size: 0.95rem; color: var(--charcoal); line-height: 1.6; }
+    .about-list li::before { content: '✦'; color: var(--accent); font-size: 0.8rem; margin-top: 3px; flex-shrink: 0; }
+
+    /* GALLERY */
+    .gallery { background: var(--plaster); padding: 8rem 6rem; }
+    .gallery-header { margin-bottom: 3rem; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .gallery-slot { border-radius: 20px; overflow: hidden; aspect-ratio: 1; position: relative; cursor: pointer; border: 2px dashed var(--plaster-dark); transition: border-color 0.2s, box-shadow 0.2s; background: white; }
+    .gallery-slot:hover { border-color: var(--accent); box-shadow: 0 8px 30px rgba(201,79,115,0.15); }
+    .gallery-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--muted); font-size: 0.85rem; text-align: center; }
+    .slot-placeholder .slot-icon { font-size: 2rem; color: var(--plaster-dark); }
+    .slot-overlay { position: absolute; inset: 0; background: rgba(201,79,115,0.82); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: white; font-weight: 600; font-size: 0.9rem; gap: 0.4rem; }
+    .gallery-slot:hover .slot-overlay { opacity: 1; }
+
+    /* PROGRAMS */
+    .program { background: var(--white); padding: 8rem 6rem; text-align: center; }
+    .program-header { margin-bottom: 4rem; }
+    .program-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+    .prog-card { background: var(--plaster); border-radius: 24px; padding: 2.5rem 2rem; text-align: left; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(244,167,185,0.3); }
+    .prog-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(201,79,115,0.12); }
+    .prog-icon { width: 56px; height: 56px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.5rem; }
+    .prog-card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--charcoal); }
+    .prog-card p { font-size: 0.9rem; line-height: 1.7; color: var(--muted); }
+
+    /* DONATE */
+    .donate { background: linear-gradient(135deg, var(--accent) 0%, var(--pink-deep) 100%); padding: 8rem 6rem; text-align: center; position: relative; overflow: hidden; }
+    .donate::before { content: ''; position: absolute; width: 500px; height: 500px; background: rgba(255,255,255,0.06); border-radius: 50%; top: -200px; left: -100px; }
+    .donate::after { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(255,255,255,0.06); border-radius: 50%; bottom: -150px; right: -80px; }
+    .donate h2 { color: white; }
+    .donate > div > p { color: rgba(255,255,255,0.85); font-size: 1.1rem; line-height: 1.75; max-width: 560px; margin: 1rem auto 3rem; }
+    .donate-amounts { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .amount-btn { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); color: white; padding: 0.75rem 1.8rem; border-radius: 100px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.2s; font-family: 'DM Sans', sans-serif; }
+    .amount-btn:hover, .amount-btn.active { background: white; color: var(--accent); transform: scale(1.05); }
+    .donate-btn { background: white; color: var(--accent); padding: 1rem 3rem; border-radius: 100px; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block; transition: transform 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.15); position: relative; z-index: 2; }
+    .donate-btn:hover { transform: translateY(-3px); }
+
+    /* JOIN */
+    .join { padding: 8rem 6rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .join-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: flex; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--charcoal); }
+    input, select, textarea { padding: 0.85rem 1rem; border: 1.5px solid var(--plaster-dark); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--charcoal); background: var(--white); transition: border-color 0.2s; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--pink-deep); }
+    textarea { resize: vertical; min-height: 100px; }
+    .submit-btn { background: var(--accent); color: white; border: none; padding: 1rem 2rem; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s; margin-top: 0.5rem; }
+    .submit-btn:hover { background: var(--pink-deep); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: var(--charcoal); color: white; padding: 5rem 6rem 2rem; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+    .footer-brand h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--pink); margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.7; max-width: 300px; }
+    .footer-social { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+    .social-btn { width: 38px; height: 38px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; text-decoration: none; transition: background 0.2s; }
+    .social-btn:hover { background: var(--accent); }
+    .footer-col h4 { font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .footer-col ul a { text-decoration: none; font-size: 0.9rem; color: rgba(255,255,255,0.65); transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--pink); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: rgba(255,255,255,0.35); }
+
+    /* ════════ ADMIN PANEL ════════ */
+    #admin-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(45,31,38,0.6); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
+    #admin-overlay.open { display: flex; }
+    #admin-panel { background: var(--white); border-radius: 28px; width: 90%; max-width: 680px; max-height: 88vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 40px 80px rgba(0,0,0,0.25); }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .admin-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin: 0; }
+    .admin-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+    .admin-section { margin-bottom: 2rem; }
+    .admin-section-title { font-size: 0.76rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--plaster-dark); }
+    .upload-row { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; border: 1.5px solid var(--plaster-dark); border-radius: 14px; margin-bottom: 0.75rem; transition: border-color 0.2s; }
+    .upload-row:hover { border-color: var(--pink); }
+    .upload-thumb { width: 50px; height: 50px; border-radius: 10px; background: var(--plaster); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; overflow: hidden; }
+    .upload-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .upload-info { flex: 1; }
+    .upload-info .lbl { font-size: 0.85rem; font-weight: 600; color: var(--charcoal); }
+    .upload-info .sub { font-size: 0.77rem; color: var(--muted); margin-top: 0.1rem; }
+    .choose-btn { background: var(--plaster); color: var(--accent); border: none; padding: 0.5rem 1rem; border-radius: 100px; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; white-space: nowrap; }
+    .choose-btn:hover { background: var(--pink); color: white; }
+    .rm-btn { background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); transition: color 0.2s; flex-shrink: 0; }
+    .rm-btn:hover { color: var(--accent); }
+    .hidden { display: none; }
+    .save-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 1rem; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+    .save-btn:hover { background: var(--pink-deep); }
+    .admin-note { font-size: 0.77rem; color: var(--muted); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+    .success-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--charcoal); color: white; padding: 0.85rem 2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; z-index: 9999; pointer-events: none; }
+    .success-toast.show { opacity: 1; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; } .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; } .hero-right { display: none; } .hero-left { padding: 6rem 2rem 4rem; }
+      .about, .join { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+      .program, .gallery, .donate { padding: 5rem 2rem; }
+      .program-grid, .gallery-grid { grid-template-columns: 1fr; }
+      .stats-bar { flex-direction: column; } .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      footer { padding: 4rem 2rem 2rem; } .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">N'dossy<span> Foundation</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#join">Get Involved</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="admin-btn" onclick="openAdmin()">⚙️ Manage Images</button>
+    <a href="#donate" class="nav-cta">Donate</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">🌸 Period Poverty Advocacy</div>
+    <h1>Every Girl Deserves to <em>Thrive</em> — Not Survive.</h1>
+    <p class="hero-desc">N'dossy Foundation provides menstrual hygiene products and education to girls facing period poverty, so no girl ever has to miss school or lose her dignity.</p>
+    <div class="hero-btns">
+      <a href="#donate" class="btn-primary">💛 Donate Now</a>
+      <a href="#programs" class="btn-outline">Our Programs</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-wrap" id="hero-wrap">
+      <!-- image or placeholder injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item fade-in"><span class="stat-num">500+</span><div class="stat-desc">Girls directly supported</div></div>
+  <div class="stat-item fade-in"><span class="stat-num">4€</span><div class="stat-desc">Can keep one girl in school</div></div>
+  <div class="stat-item fade-in"><span class="stat-num">2+</span><div class="stat-desc">Countries of impact</div></div>
+  <div class="stat-item fade-in"><span class="stat-num">100%</span><div class="stat-desc">Committed to every girl</div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-text fade-in">
+    <div class="section-label">Who We Are</div>
+    <h2>Fighting Period Poverty, <em>One Girl at a Time</em></h2>
+    <p>N'dossy Foundation was born from a simple but powerful conviction: period products are not a luxury — they are a necessity. Period poverty forces thousands of girls to miss school, compromise their health, and lose their confidence every month.</p>
+    <p>Founded by a young woman who decided to fund and provide menstrual hygiene products to those who need them most, N'dossy Foundation operates at the intersection of health equity, education, and women's empowerment.</p>
+    <a href="#programs" class="btn-primary" style="margin-top:1rem;">Learn About Our Work</a>
+  </div>
+  <div class="about-visual fade-in">
+    <ul class="about-list">
+      <li>We distribute reusable menstrual pads to girls in under-resourced communities.</li>
+      <li>We run awareness campaigns to destigmatize menstruation and promote menstrual health education.</li>
+      <li>We advocate for policy change to make period products accessible for all girls.</li>
+      <li>We partner with schools, community centers, and local organizations to maximise reach.</li>
+      <li>We believe no girl's education should ever be interrupted by her period.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="gallery-header fade-in">
+    <div class="section-label">Our Work in Action</div>
+    <h2>Stories in <em>Images</em></h2>
+  </div>
+  <div class="gallery-grid" id="gallery-grid">
+    <!-- slots injected by JS -->
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="program" id="programs">
+  <div class="program-header fade-in">
+    <div class="section-label">What We Do</div>
+    <h2>Our <em>Programs</em></h2>
+    <p style="color:var(--muted);max-width:560px;margin:0.5rem auto 0;line-height:1.75;">Three pillars of action — products, education, and advocacy — working together to end period poverty.</p>
+  </div>
+  <div class="program-grid">
+    <div class="prog-card fade-in"><div class="prog-icon">🩸</div><h3>Pads4Girls Project</h3><p>Our flagship initiative: distributing reusable, eco-friendly menstrual pads to girls who cannot afford them. A single donation of 4€ can keep a girl in school for a whole month.</p></div>
+    <div class="prog-card fade-in"><div class="prog-icon">📚</div><h3>Menstrual Health Education</h3><p>We go into schools and communities to teach girls and boys about menstrual health, hygiene, and dispel myths — because education is the foundation of dignity.</p></div>
+    <div class="prog-card fade-in"><div class="prog-icon">📢</div><h3>Period Poverty Advocacy</h3><p>We raise awareness through campaigns, social media, and community outreach to shift the narrative around menstruation from shame to strength and normalcy.</p></div>
+  </div>
+</section>
+
+<!-- DONATE -->
+<section class="donate" id="donate">
+  <div class="fade-in">
+    <div class="section-label" style="color:rgba(255,255,255,0.7);">Make A Difference</div>
+    <h2>Your Gift Keeps a Girl in School</h2>
+    <p>Period poverty doesn't have to be a girl's reality. With as little as 4€, you can provide a month's supply of menstrual products and change a girl's life.</p>
+    <div class="donate-amounts">
+      <button class="amount-btn active">4€</button>
+      <button class="amount-btn">10€</button>
+      <button class="amount-btn">25€</button>
+      <button class="amount-btn">50€</button>
+      <button class="amount-btn">Custom</button>
+    </div>
+    <a href="mailto:ndossyfoundation@gmail.com?subject=Donation to N'dossy Foundation" class="donate-btn">💛 Donate Today</a>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join" id="join">
+  <div class="fade-in">
+    <div class="section-label">Get Involved</div>
+    <h2>Join the <em>Movement</em></h2>
+    <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Whether you want to volunteer, partner with us, or simply spread the word — there's a place for you in the N'dossy community.</p>
+    <ul class="about-list">
+      <li>Volunteer at our distribution events and workshops</li>
+      <li>Fundraise in your school, church, or workplace</li>
+      <li>Partner as an organization or business</li>
+      <li>Follow & share our campaigns on social media</li>
+    </ul>
+  </div>
+  <div class="join-form fade-in">
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><input type="text" placeholder="Marie" /></div>
+      <div class="form-group"><label>Last Name</label><input type="text" placeholder="Duval" /></div>
+    </div>
+    <div class="form-group"><label>Email Address</label><input type="email" placeholder="marie@example.com" /></div>
+    <div class="form-group"><label>How would you like to help?</label>
+      <select><option>Volunteer at events</option><option>Fundraise for us</option><option>Organizational partnership</option><option>Spread awareness</option><option>Other</option></select>
+    </div>
+    <div class="form-group"><label>Message (optional)</label><textarea placeholder="Tell us a bit about yourself..."></textarea></div>
+    <button class="submit-btn">Send Message 💌</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>N'dossy Foundation</h3>
+      <p>Fighting period poverty so every girl can pursue her education, health, and dreams — without interruption.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/ndossyfoundation" target="_blank" class="social-btn">📸</a>
+        <a href="#" class="social-btn">🐦</a>
+        <a href="#" class="social-btn">📘</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul>
+      <li><a href="#about">About Us</a></li><li><a href="#gallery">Gallery</a></li>
+      <li><a href="#programs">Programs</a></li><li><a href="#join">Get Involved</a></li><li><a href="#donate">Donate</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul>
+      <li><a href="mailto:ndossyfoundation@gmail.com">ndossyfoundation@gmail.com</a></li>
+      <li><a href="tel:+256745851111">+256 745 851 111</a></li>
+      <li><a href="#">Uganda & Gabon</a></li>
+      <li><a href="https://www.instagram.com/ndossyfoundation" target="_blank">@ndossyfoundation</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 N'dossy Foundation. All rights reserved.</span>
+    <span>Period products are not a luxury — they are a necessity.</span>
+  </div>
+</footer>
+
+<!-- ADMIN PANEL -->
+<div id="admin-overlay" onclick="overlayClick(event)">
+  <div id="admin-panel">
+    <div class="admin-header">
+      <h2>🖼️ Manage Images</h2>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Hero Image (Banner)</div>
+      <div class="upload-row">
+        <div class="upload-thumb" id="athumb-hero">🌸</div>
+        <div class="upload-info"><div class="lbl">Main Banner Photo</div><div class="sub">Large image shown on the homepage right side</div></div>
+        <button class="choose-btn" onclick="triggerFile('hero')">📁 Choose</button>
+        <button class="rm-btn" onclick="removeImg('hero')" title="Remove">✕</button>
+        <input type="file" accept="image/*" class="hidden" id="file-hero" onchange="onFileChosen('hero',this)" />
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Gallery Photos (6 slots)</div>
+      <div id="gallery-admin-list"></div>
+    </div>
+
+    <button class="save-btn" onclick="saveAll()">✅ Save & Close</button>
+    <p class="admin-note">💡 Images are saved in your browser and will stay when you reopen the file on the same device.<br>You can also always send photos to Claude and have them added for you.</p>
+  </div>
+</div>
+
+<!-- hidden quick-click input for gallery slots -->
+<input type="file" accept="image/*" class="hidden" id="quick-input" onchange="onQuickFile(this)" />
+
+<!-- Toast -->
+<div class="success-toast" id="toast">✅ Images saved!</div>
+
+<script>
+const SLOT_LABELS = ['Distribution Event','Community Outreach','School Workshop','Pads4Girls Campaign','Team Photo','Impact Story'];
+const KEY = 'ndossy_v3';
+let data = { hero: null, gallery: Array(6).fill(null) };
+let quickIdx = null;
+
+// ── Persistence ───────────────────────────────────────────
+function load() {
+  try { const s = localStorage.getItem(KEY); if (s) data = JSON.parse(s); } catch(e){}
+  if (!Array.isArray(data.gallery)) data.gallery = Array(6).fill(null);
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {
+    alert('Some images may be too large. Try resizing them before uploading.');
+  }
+}
+
+// ── Render site ───────────────────────────────────────────
+function renderSite() {
+  // Hero
+  const wrap = document.getElementById('hero-wrap');
+  if (data.hero) {
+    wrap.innerHTML = `<img src="${data.hero}" alt="N'dossy Foundation" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
+  } else {
+    wrap.innerHTML = `<div class="img-placeholder" onclick="heroQuickUpload()"><div class="big">🌸</div><p>Click to add a hero photo</p></div>`;
+  }
+
+  // Gallery
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'gallery-slot fade-in';
+    slot.setAttribute('data-i', i);
+    if (data.gallery[i]) {
+      slot.innerHTML = `<img src="${data.gallery[i]}" alt="Gallery ${i+1}" /><div class="slot-overlay">📷 Change Photo</div>`;
+    } else {
+      slot.innerHTML = `<div class="slot-placeholder"><div class="slot-icon">📷</div><span>Click to add photo</span></div><div class="slot-overlay">📷 Upload Photo</div>`;
+    }
+    slot.onclick = () => { quickIdx = i; document.getElementById('quick-input').click(); };
+    grid.appendChild(slot);
+  }
+
+  // Re-observe new elements
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// ── Admin panel ───────────────────────────────────────────
+function buildAdminList() {
+  const list = document.getElementById('gallery-admin-list');
+  list.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const thumb = data.gallery[i] ? `<img src="${data.gallery[i]}" />` : '📷';
+    list.innerHTML += `
+      <div class="upload-row">
+        <div class="upload-thumb" id="athumb-gallery-${i}">${thumb}</div>
+        <div class="upload-info"><div class="lbl">Photo ${i+1}: ${SLOT_LABELS[i]}</div><div class="sub">Gallery slot ${i+1}</div></div>
+        <button class="choose-btn" onclick="triggerFile('gallery-${i}')">📁 Choose</button>
+        <button class="rm-btn" onclick="removeImg('gallery-${i}')" title="Remove">✕</button>
+        <input type="file" accept="image/*" class="hidden" id="file-gallery-${i}" onchange="onFileChosen('gallery-${i}',this)" />
+      </div>`;
+  }
+  // hero thumb
+  const ht = document.getElementById('athumb-hero');
+  if (ht) ht.innerHTML = data.hero ? `<img src="${data.hero}" />` : '🌸';
+}
+
+function openAdmin() { buildAdminList(); document.getElementById('admin-overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeAdmin() { document.getElementById('admin-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+function overlayClick(e) { if (e.target === document.getElementById('admin-overlay')) closeAdmin(); }
+
+function saveAll() { save(); renderSite(); closeAdmin(); showToast('Images saved!'); }
+
+// ── File handling ─────────────────────────────────────────
+function triggerFile(key) { document.getElementById('file-' + key).click(); }
+
+function onFileChosen(key, input) {
+  const file = input.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    if (key === 'hero') { data.hero = e.target.result; }
+    else { const i = parseInt(key.split('-')[1]); data.gallery[i] = e.target.result; }
+    buildAdminList(); renderSite();
+  };
+  r.readAsDataURL(file);
+  input.value = '';
+}
+
+function heroQuickUpload() { quickIdx = 'hero'; document.getElementById('quick-input').click(); }
+
+function onQuickFile(input) {
+  const file = input.files[0]; if (!file || quickIdx === null) return;
+  const r = new FileReader();
+  r.onload = e => {
+    if (quickIdx === 'hero') data.hero = e.target.result;
+    else data.gallery[quickIdx] = e.target.result;
+    save(); renderSite(); showToast('Photo added!');
+    quickIdx = null;
+  };
+  r.readAsDataURL(file);
+  input.value = '';
+}
+
+function removeImg(key) {
+  if (key === 'hero') data.hero = null;
+  else { const i = parseInt(key.split('-')[1]); data.gallery[i] = null; }
+  buildAdminList(); renderSite();
+}
+
+// ── Toast ─────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✅ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Scroll animations ─────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Donate amounts
+document.querySelectorAll('.amount-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ── Init ──────────────────────────────────────────────────
+load();
+renderSite();
+</script>
+</body>
+</html>
