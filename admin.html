@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N'dossy Foundation — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink: #F4A7B9; --pink-deep: #E8728F; --plaster: #F9E4D4;
+      --plaster-dark: #F2CBAF; --white: #FFFAF8; --charcoal: #2D1F26;
+      --muted: #8A6272; --accent: #C94F73;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--plaster); color: var(--charcoal); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; }
+
+    /* LOGIN SCREEN */
+    #login-screen {
+      width: 100%; max-width: 420px; background: var(--white); border-radius: 28px;
+      padding: 3rem 2.5rem; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      margin-top: 4rem;
+    }
+    .login-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .login-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--charcoal); margin-bottom: 0.5rem; }
+    .login-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+    .login-input {
+      width: 100%; padding: 1rem 1.2rem; border: 1.5px solid var(--plaster-dark);
+      border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      color: var(--charcoal); background: var(--white); outline: none;
+      transition: border-color 0.2s; text-align: center; letter-spacing: 4px;
+      margin-bottom: 1rem;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      width: 100%; background: var(--accent); color: white; border: none;
+      padding: 1rem; border-radius: 100px; font-family: 'DM Sans', sans-serif;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--pink-deep); }
+    .login-error { color: var(--accent); font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+
+    /* ADMIN DASHBOARD */
+    #admin-screen { display: none; width: 100%; max-width: 700px; }
+
+    .admin-header {
+      background: var(--white); border-radius: 24px; padding: 1.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .admin-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; color: var(--accent); }
+    .admin-brand span { color: var(--charcoal); }
+    .view-site-btn {
+      background: var(--plaster); color: var(--charcoal); border: none; padding: 0.6rem 1.2rem;
+      border-radius: 100px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; text-decoration: none; transition: background 0.2s;
+    }
+    .view-site-btn:hover { background: var(--plaster-dark); }
+
+    .section-card {
+      background: var(--white); border-radius: 24px; padding: 2rem;
+      margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .section-title {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.2rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--plaster-dark);
+    }
+
+    /* HERO UPLOAD */
+    .hero-upload-area {
+      border: 2px dashed var(--plaster-dark); border-radius: 18px; overflow: hidden;
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color 0.2s; position: relative; background: var(--plaster);
+    }
+    .hero-upload-area:hover { border-color: var(--accent); }
+    .hero-upload-area img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--muted); }
+    .hero-upload-placeholder .icon { font-size: 2.5rem; }
+    .hero-upload-placeholder p { font-size: 0.9rem; font-weight: 500; }
+    .hero-upload-placeholder span { font-size: 0.78rem; }
+    .hero-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+
+    /* GALLERY GRID */
+    .gallery-admin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .gallery-admin-slot {
+      aspect-ratio: 1; border-radius: 16px; overflow: hidden; position: relative;
+      border: 2px dashed var(--plaster-dark); cursor: pointer; background: var(--plaster);
+      transition: border-color 0.2s;
+    }
+    .gallery-admin-slot:hover { border-color: var(--accent); }
+    .gallery-admin-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot-empty { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; }
+    .slot-empty .sicon { font-size: 1.8rem; color: var(--plaster-dark); }
+    .slot-empty .slabel { font-size: 0.72rem; color: var(--muted); text-align: center; padding: 0 0.5rem; font-weight: 500; }
+    .slot-hover { position: absolute; inset: 0; background: rgba(201,79,115,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: white; font-size: 0.8rem; font-weight: 600; gap: 0.3rem; }
+    .slot-hover .hicon { font-size: 1.5rem; }
+    .gallery-admin-slot:hover .slot-hover { opacity: 1; }
+
+    /* BUTTONS */
+    .btn-pink {
+      background: var(--accent); color: white; border: none; padding: 0.65rem 1.3rem;
+      border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-pink:hover { background: var(--pink-deep); }
+    .btn-ghost {
+      background: var(--plaster); color: var(--muted); border: none; padding: 0.65rem 1.3rem;
+      border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-ghost:hover { background: var(--plaster-dark); }
+
+    .save-bar {
+      background: var(--white); border-radius: 24px; padding: 1.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 2rem;
+    }
+    .save-bar p { font-size: 0.85rem; color: var(--muted); }
+    .save-bar p strong { color: var(--charcoal); }
+
+    .hidden { display: none; }
+
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      background: var(--charcoal); color: white; padding: 0.85rem 2rem;
+      border-radius: 100px; font-size: 0.9rem; font-weight: 600;
+      opacity: 0; transition: opacity 0.3s; z-index: 999; pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .gallery-admin-grid { grid-template-columns: repeat(2, 1fr); }
+      .admin-header { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-icon">🔐</div>
+  <div class="login-title">Admin Access</div>
+  <p class="login-sub">N'dossy Foundation — Image Manager</p>
+  <input type="password" class="login-input" id="pwd-input" placeholder="••••" onkeydown="if(event.key==='Enter') checkPwd()" />
+  <button class="login-btn" onclick="checkPwd()">Enter</button>
+  <p class="login-error" id="login-error">❌ Wrong password. Try again.</p>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="admin-screen">
+
+  <div class="admin-header">
+    <div class="admin-brand">N'dossy<span> Foundation</span> — Image Manager</div>
+    <a href="index.html" class="view-site-btn" target="_blank">👁 View Site</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="section-card">
+    <div class="section-title">🌸 Hero Banner Photo</div>
+    <div class="hero-upload-area" id="hero-area" onclick="document.getElementById('file-hero').click()">
+      <div class="hero-upload-placeholder" id="hero-placeholder">
+        <div class="icon">📷</div>
+        <p>Click to upload hero photo</p>
+        <span>This appears on the right side of the homepage</span>
+      </div>
+      <img id="hero-preview" src="" style="display:none;width:100%;height:100%;object-fit:cover;" />
+    </div>
+    <div class="hero-actions">
+      <button class="btn-pink" onclick="document.getElementById('file-hero').click()">📁 Choose Photo</button>
+      <button class="btn-ghost" onclick="removeHero()">✕ Remove</button>
+    </div>
+    <input type="file" accept="image/*" class="hidden" id="file-hero" onchange="onHero(this)" />
+  </div>
+
+  <!-- GALLERY -->
+  <div class="section-card">
+    <div class="section-title">🖼️ Gallery Photos (6 slots)</div>
+    <div class="gallery-admin-grid" id="gallery-admin-grid">
+      <!-- built by JS -->
+    </div>
+  </div>
+
+  <!-- SAVE -->
+  <div class="save-bar">
+    <p><strong>Ready to save?</strong> Click Save to update your website.</p>
+    <button class="btn-pink" onclick="saveAll()">✅ Save All Changes</button>
+  </div>
+
+</div>
+
+<!-- hidden inputs for gallery -->
+<input type="file" accept="image/*" class="hidden" id="gfile" onchange="onGalleryFile(this)" />
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY = 'ndossy_v3';
+const SLOT_LABELS = ['Distribution Event','Community Outreach','School Workshop','Pads4Girls Campaign','Team Photo','Impact Story'];
+let data = { hero: null, gallery: Array(6).fill(null) };
+let activeGalleryIdx = null;
+
+// ── Auth ──────────────────────────────────────────────────
+function checkPwd() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === '2005') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadData();
+    renderAdmin();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+  }
+}
+
+// ── Data ──────────────────────────────────────────────────
+function loadData() {
+  try { const s = localStorage.getItem(KEY); if (s) data = JSON.parse(s); } catch(e) {}
+  if (!Array.isArray(data.gallery)) data.gallery = Array(6).fill(null);
+}
+function saveData() {
+  try { localStorage.setItem(KEY, JSON.stringify(data)); return true; }
+  catch(e) { alert('Images too large for browser storage. Try smaller images.'); return false; }
+}
+
+// ── Render ────────────────────────────────────────────────
+function renderAdmin() {
+  // Hero
+  const preview = document.getElementById('hero-preview');
+  const placeholder = document.getElementById('hero-placeholder');
+  if (data.hero) {
+    preview.src = data.hero; preview.style.display = 'block';
+    placeholder.style.display = 'none';
+  } else {
+    preview.style.display = 'none'; placeholder.style.display = 'flex';
+  }
+
+  // Gallery
+  const grid = document.getElementById('gallery-admin-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'gallery-admin-slot';
+    if (data.gallery[i]) {
+      slot.innerHTML = `<img src="${data.gallery[i]}" alt="Slot ${i+1}" /><div class="slot-hover"><div class="hicon">📷</div>Change Photo<br><small style="opacity:0.8;font-size:0.7rem">or long-press to remove</small></div>`;
+      slot.onclick = () => { activeGalleryIdx = i; document.getElementById('gfile').click(); };
+      slot.oncontextmenu = (e) => { e.preventDefault(); if(confirm('Remove this photo?')) { data.gallery[i]=null; renderAdmin(); } };
+    } else {
+      slot.innerHTML = `<div class="slot-empty"><div class="sicon">📷</div><div class="slabel">${SLOT_LABELS[i]}</div></div><div class="slot-hover"><div class="hicon">➕</div>Add Photo</div>`;
+      slot.onclick = () => { activeGalleryIdx = i; document.getElementById('gfile').click(); };
+    }
+    grid.appendChild(slot);
+  }
+}
+
+// ── File Handlers ─────────────────────────────────────────
+function onHero(input) {
+  const file = input.files[0]; if (!file) return;
+  readFile(file, result => { data.hero = result; renderAdmin(); showToast('Hero photo ready — click Save!'); });
+  input.value = '';
+}
+
+function onGalleryFile(input) {
+  const file = input.files[0]; if (!file || activeGalleryIdx === null) return;
+  readFile(file, result => { data.gallery[activeGalleryIdx] = result; renderAdmin(); showToast('Photo ready — click Save!'); activeGalleryIdx = null; });
+  input.value = '';
+}
+
+function removeHero() {
+  if (!data.hero) return;
+  if (confirm('Remove the hero photo?')) { data.hero = null; renderAdmin(); }
+}
+
+function readFile(file, cb) {
+  const r = new FileReader();
+  r.onload = e => cb(e.target.result);
+  r.readAsDataURL(file);
+}
+
+// ── Save ──────────────────────────────────────────────────
+function saveAll() {
+  if (saveData()) showToast('✅ Saved! Refresh your website to see changes.');
+}
+
+// ── Toast ─────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
